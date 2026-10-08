@@ -8,9 +8,13 @@ This lab validates one specific path:
 ARO Classic + service principal + CCO passthrough + Azure Route Server
 ```
 
-The cluster principal is read from `kube-system/azure-credentials` and receives access to the Azure resource group containing Route Server.
+The operator creates a `CredentialsRequest`, and CCO writes `bgp-cloud-connector-azure-credentials` in the operator namespace.
 
-The operator uses the credential delivered by Cloud Credential Operator to manage Route Server peers and worker NIC IP forwarding.
+In passthrough mode, that secret contains the cluster principal credential, which the operator uses to manage Route Server peers and worker NIC IP forwarding.
+
+The administrator reads `kube-system/azure-credentials` to identify the cluster principal for the Azure role grant.
+
+The operator does not read `kube-system/azure-credentials` directly.
 
 ## 2. Product positioning
 

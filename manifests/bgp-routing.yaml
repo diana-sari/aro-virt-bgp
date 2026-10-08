@@ -14,4 +14,4 @@ spec:
   network:
     name: ${CUDN_NETWORK_NAME}
     subnets:
-      - 10.100.0.0/16
+      - ${CUDN_SUBNET}

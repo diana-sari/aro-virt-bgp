@@ -74,9 +74,8 @@ For durable inheritance, place the router label in each selected MachineSet's No
 
 ```bash
 export MACHINESET_NAME="<worker-machineset>"
-envsubst < manifests/machineset-router-label-example.yaml > /tmp/machineset-router-label.yaml
 oc patch machineset "$MACHINESET_NAME" -n openshift-machine-api \
-  --type=merge --patch-file /tmp/machineset-router-label.yaml
+  --type=merge --patch-file manifests/machineset-router-label-example.yaml
 ```
 
 For existing Nodes, label them explicitly:

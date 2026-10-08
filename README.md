@@ -54,9 +54,9 @@ The validated lab deployed Azure Route Server in `RouteServerSubnet` at `10.0.12
 
 Current Microsoft guidance requires `RouteServerSubnet` to be `/26` or larger for new deployments.
 
-The operator owned the cloud peer lifecycle.
+The operator auto-discovered the Azure Route Server neighbor addresses and ASN, then managed the Azure peer and FRR lifecycle.
 
-No Route Server peers or neighbor addresses were configured manually.
+No neighbor IPs or Route Server peers were configured manually.
 
 ## Validated versions and artifacts
 
