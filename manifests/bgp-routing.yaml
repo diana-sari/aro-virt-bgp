@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${CUDN_NAMESPACE}
+  labels:
+    k8s.ovn.org/primary-user-defined-network: ""
+    cluster-udn: ${CUDN_NETWORK_NAME}
+---
+apiVersion: networking.openshift.io/v1beta1
+kind: BGPRouting
+metadata:
+  name: ${BGP_ROUTING_NAME}
+spec:
+  network:
+    name: ${CUDN_NETWORK_NAME}
+    subnets:
+      - 10.100.0.0/16

@@ -1,0 +1,9 @@
+# Merge patch for use with:
+# oc patch machineset "$MACHINESET_NAME" -n openshift-machine-api \
+#   --type=merge --patch-file <rendered-file>
+spec:
+  template:
+    spec:
+      metadata:
+        labels:
+          bgp_router: "true"

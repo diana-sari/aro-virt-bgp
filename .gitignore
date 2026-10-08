@@ -1,0 +1,20 @@
+# Local credentials and cluster access
+*.kubeconfig
+kubeconfig
+pull-secret*
+*password*
+*secret*
+*.pem
+*.key
+
+# Terraform state and plans
+*.tfstate
+*.tfstate.*
+*.tfplan
+.terraform/
+
+# Rendered and temporary files
+.env
+operator-rendered.yaml
+*.log
+.DS_Store
