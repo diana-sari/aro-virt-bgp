@@ -4,7 +4,7 @@
 
 This repository is a reproducible lab for the engineering BGP Cloud Connector path on Azure Red Hat OpenShift Classic.
 
-The validated identity model is ARO Classic with a service principal and Cloud Credential Operator passthrough.
+Two ARO Classic authentication paths have been functionally validated: service principal with Cloud Credential Operator passthrough, and managed identities with workload identity.
 
 The lab connects an OpenShift Virtualization VM on a ClusterUserDefinedNetwork to an Azure virtual network through Azure Route Server.
 
@@ -24,15 +24,15 @@ The validated implementation can:
 
 This lab does not validate:
 
-- ARO Classic with managed identities or MIWI.
 - ARO HCP.
 - A final support policy or final product identity design.
 - Production scale, performance, or failure-domain design.
 - Every upgrade, drift, or disaster-recovery scenario.
 
-The service-principal identity model was functionally validated.
+The service-principal and MIWI identity models were functionally validated.
 
 This repository makes no support-policy determination about the final product identity design.
+In particular, the additive BGP Cloud Connector federated credential on the ARO `machine-api` identity remains an open supportability and product-policy question.
 
 ## Validated architecture
 
@@ -58,11 +58,30 @@ The operator auto-discovered the Azure Route Server neighbor addresses and ASN, 
 
 No neighbor IPs or Route Server peers were configured manually.
 
+## Validated authentication paths
+
+### ARO Classic with a service principal
+
+- CCO passthrough supplies the cluster service-principal credential to the operator.
+- The operator uses the cluster service principal for Azure operations.
+- The cluster service principal requires an additional Network Contributor grant on the resource group containing Azure Route Server.
+
+### ARO Classic with MIWI
+
+- A dedicated operator workload identity performs Azure Route Server operations.
+- The ARO `machine-api` workload identity performs worker NIC operations.
+- `spec.azure.networkInterfaceClientID` selects the `machine-api` identity for NIC calls.
+- CCO supplies a federated workload-identity credential with no client secret.
+
+The MIWI path is functionally validated.
+The additive operator federated credential on `machine-api` remains an open supportability and product-policy question.
+See [ARO Classic MIWI validation](docs/06-aro-classic-miwi-validation.md) for the detailed evidence and caveats.
+
 ## Validated versions and artifacts
 
 | Component | Validated value |
 |---|---|
-| ARO | Classic, service principal |
+| ARO | Classic, service principal and MIWI |
 | OpenShift | 4.21.22 |
 | OpenShift Virtualization | 4.21.17 |
 | BGP Cloud Connector commit | `d317567b54e6d4457246032f952fa6c6b80973c7` |
@@ -104,7 +123,8 @@ The worker lifecycle test also passed:
 │   ├── 02-aro-classic-sp-runbook.md
 │   ├── 03-cudn-virt-validation.md
 │   ├── 04-worker-lifecycle-validation.md
-│   └── 05-troubleshooting-and-findings.md
+│   ├── 05-troubleshooting-and-findings.md
+│   └── 06-aro-classic-miwi-validation.md
 ├── manifests
 │   ├── bgp-cloud-configuration.yaml
 │   ├── bgp-routing.yaml
@@ -118,7 +138,7 @@ The worker lifecycle test also passed:
 
 ## Quick start
 
-Start with [the prerequisites and architecture](docs/01-prereqs-and-architecture.md), then follow [the ARO Classic service-principal runbook](docs/02-aro-classic-sp-runbook.md).
+Start with [the prerequisites and architecture](docs/01-prereqs-and-architecture.md), then follow [the ARO Classic service-principal runbook](docs/02-aro-classic-sp-runbook.md) or review the [ARO Classic MIWI validation](docs/06-aro-classic-miwi-validation.md).
 
 Use the manifests only after replacing their documented placeholders.
 
@@ -130,5 +150,5 @@ Use the manifests only after replacing their documented placeholders.
 - [Create an Azure Route Server](https://learn.microsoft.com/azure/route-server/quickstart-create-route-server-portal)
 - [openshift/release#85681](https://github.com/openshift/release/pull/85681)
 - [openshift/release#86426](https://github.com/openshift/release/pull/86426), related engineering CI provisioning context only. This lab did not use that provisioning flow.
-- [openshift/release#86150](https://github.com/openshift/release/pull/86150), future MIWI context only.
-- [bgp-cloud-connector#156](https://github.com/openshift/bgp-cloud-connector/pull/156), future MIWI context only.
+- [openshift/release#86150](https://github.com/openshift/release/pull/86150), MIWI engineering context.
+- [bgp-cloud-connector#156](https://github.com/openshift/bgp-cloud-connector/pull/156), MIWI engineering context.

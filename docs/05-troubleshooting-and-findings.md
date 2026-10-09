@@ -57,13 +57,16 @@ Track the upstream API migration rather than editing operator-generated FRR reso
 
 ## 7. KubeVirt streaming issue
 
-`virtctl ssh` failed with WebSocket close code 1006 even when using cluster-matching `virtctl` v1.7.4.
+An initial `virtctl` client and server version mismatch produced WebSocket close code 1006.
 
-Logs indicated missing `virt-handler` client certificate files under `/etc/virt-handler/clientcertificates/`.
+Using cluster-matching `virtctl` v1.7.4 enabled the initial guest dataplane validation in the MIWI lab.
 
-Serial-console access worked, and guest dataplane connectivity succeeded.
+The streaming failure later recurred with the matching client during post-replacement access.
+Logs also reported missing `virt-handler` client certificate files under `/etc/virt-handler/clientcertificates/`.
+The VM remained Running and Ready, and the serial console connected, but the key-only guest had no console password.
 
 This is an OpenShift Virtualization or KubeVirt streaming finding, not a BGP Cloud Connector failure.
+Using a matching client is an important first diagnostic step, but it is not a guaranteed fix for every WebSocket close 1006 failure.
 
 ## 8. Azure effective-route discrepancy
 
