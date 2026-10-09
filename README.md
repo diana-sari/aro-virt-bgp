@@ -98,7 +98,9 @@ The OCP 4.22 file-based catalog and generic 1.0.0 image were not used.
 
 The CUDN VM at `10.100.0.3` reached the Azure VM at `10.0.10.4` with no packet loss.
 
-The worker lifecycle test also passed:
+### ARO Classic service-principal lifecycle result
+
+The service-principal worker lifecycle test also passed:
 
 - The initial router worker used `10.0.2.6`.
 - Its Machine was deleted through the OpenShift Machine API.
@@ -111,6 +113,13 @@ The worker lifecycle test also passed:
 - Azure continued learning `10.100.0.0/16`.
 - The CUDN VM continued reaching `10.0.10.4`.
 - The final ping returned 4 of 4 replies with 0 percent loss.
+
+### ARO Classic MIWI lifecycle result
+
+The MIWI worker replacement changed the router worker address from `10.0.2.5` to `10.0.2.7`.
+BGP, Route Server peer, and NIC forwarding reconciliation completed automatically.
+The post-replacement guest ping was not repeated because of the separate KubeVirt streaming and console-login issue.
+See [ARO Classic MIWI validation](docs/06-aro-classic-miwi-validation.md) for the detailed evidence and caveats.
 
 ## Repository structure
 
